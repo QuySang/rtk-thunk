@@ -1,14 +1,26 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout, selectUser } from "../redux/slices/loginSlice";
+import { useGetUserQuery } from "../redux/slices/loginApi";
 function Dashboard(props) {
-  const name = useSelector((state) => state.user.username);
-  console.log(name);
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+  const user = useSelector(selectUser);
+  const { ...x } = useGetUserQuery();
+  // console.log(x);
+  useEffect(() => {
+    if (user === null) {
+      return nav("/login");
+    }
+  }, []);
   return (
     <>
       <h1>DashBoard</h1>
-      <h2>WelCome Guest {name}</h2>
-      <Link to="/login">Logout</Link>
+      <h2>WelCome Guest </h2>
+      <Link to="/login" onClick={() => dispatch(logout())}>
+        Logout
+      </Link>
     </>
   );
 }
